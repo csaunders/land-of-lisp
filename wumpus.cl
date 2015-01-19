@@ -20,6 +20,16 @@
   (apply #'append (loop repeat *edge-num*
                         collect (edge-pair (random-node) (random-node)))))
 
+;; Chapter 9 -- Replacing Edge List with Hashes
+(defun hash-edges (edge-list)
+  (let ((tab (make-hash-table)))
+    (mapc (lambda (x)
+            (let ((node (car x)))
+              (push (cdr x) (gethash node tab))))
+          edge-list)
+    tab))
+;; /end
+
 (defun direct-edges (node edge-list)
   (remove-if-not (lambda (x)
                     (eql (car x) node))
@@ -35,6 +45,19 @@
                       (direct-edges node edge-list)))))
       (traverse node))
     visited))
+
+;; Chapter 9 -- Replacing Get Connected with Hashes
+(defun get-connected-hash (node edge-tab)
+  (let ((visited (make-hash-table)))
+    (labels ((traverse (node)
+              (unless (gethash node visited)
+                (setf (gethash node visited) t)
+                (mapc (lambda (edge)
+                        (traverse edge))
+                      (gethash node edge-tab)))))
+    (traverse node))
+  visited))
+;; /end
 
 (defun find-islands (nodes edge-list)
   (let ((islands nil))
