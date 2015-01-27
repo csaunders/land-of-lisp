@@ -18,3 +18,15 @@
 (defun add (a b)
   (cond ((and (numberp a) (numberp b)) (+ a b))
         ((and (listp a) (listp b)) (append a b))))
+
+(defun random-animal ()
+  (nth (random 5) '("dog" "tick" "tiger" "walrus" "kangaroo")))
+
+(loop repeat 10 do
+  (format t "~10:@<~a~>~10:@<~a~>~10:@<~a~>~%"
+    (random-animal)
+    (random-animal)
+    (random-animal)))
+
+(defun random-animals (size)
+  (loop repeat size collect (random-animal)))
