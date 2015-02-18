@@ -59,6 +59,40 @@
             (limit-tree-depth (cadr move) (1- depth))))
         (caddr tree)))))
 
+(defun score-board (board player)
+  (loop for hex across board
+        for pos from 0
+        sum (if (eq (car hex) player)
+                (if (threatened pos board)
+                    1
+                    2)
+                -1)))
+
+(defun threatened (pos board)
+  (let* ((hex (aref board pos))
+         (player (car hex))
+         (dice (cadr hex)))
+    (loop for n in (neighbors pos)
+          do (let* ((nhex (aref board n))
+                    (nplayer (car nhex))
+                    (ndice (cadr nhex)))
+              (when (and (not (eq player nplayer)) (> ndice dice))
+                (return t))))))
+
+(defun get-ratings (tree player)
+  (take-all (lazy-mapcar (lambda (move)
+                            (rate-position (cadr move) player))
+                         (caddr tree))))
+
+(defun rate-position (tree player)
+  (let ((moves (caddr tree)))
+    (if (not (lazy-null moves))
+        (apply (if (eq (car tree) player)
+                   #'max
+                   #'min)
+        (get-ratings tree player))
+        (score-board (cadr tree) player))))
+
 (defun handle-human (tree)
   (fresh-line)
   (princ "choose your move:")
