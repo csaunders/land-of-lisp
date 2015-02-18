@@ -1,24 +1,3 @@
-(defmacro let1 (var val &body body)
-  `(let ((,var ,val))
-    ,@body))
-
-
-(defmacro split (val yes no)
-  (let1 g (gensym)
-    `(let1 ,g ,val
-      (if ,g
-        (let ((head (car ,g))
-          (tail (cdr ,g)))
-          ,yes)
-          ,no))))
-
-(defmacro recurse (vars &body body)
-  (let1 p (pairs vars)
-    `(labels ((self ,(mapcar #'car p)
-                  ,@body))
-      (self ,@(mapcar #'cdr p)))))
-
-
 (defun my-length (lst)
   (recurse
     (lst lst acc 0)
@@ -41,3 +20,23 @@
                   (reverse acc))
                 (reverse acc))))
     (f lst nil)))
+
+(defmacro let1 (var val &body body)
+  `(let ((,var ,val))
+    ,@body))
+
+
+(defmacro split (val yes no)
+  (let1 g (gensym)
+    `(let1 ,g ,val
+      (if ,g
+        (let ((head (car ,g))
+          (tail (cdr ,g)))
+          ,yes)
+          ,no))))
+
+(defmacro recurse (vars &body body)
+  (let1 p (pairs vars)
+    `(labels ((self ,(mapcar #'car p)
+                  ,@body))
+      (self ,@(mapcar #'cdr p)))))
