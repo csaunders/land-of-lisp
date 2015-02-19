@@ -63,7 +63,12 @@
                      (params (append (cdr url)
                                      (get-content-params stream header)))
                      (*standard-output* stream))
-                        (funcall request-handler path header params))))
+                        (progn
+                          (format t "HTTP/1.1 200 OK~%")
+                          (format t "Content-Type: text/html~%")
+                          (format t "~%")
+                          (funcall request-handler path header params))
+                        )))
       (socket-server-close socket))))
 
 
