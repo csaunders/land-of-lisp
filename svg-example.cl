@@ -1,4 +1,4 @@
-(load "svg_dsl")
+(load "svg-dsl")
 
 (with-open-file
   (*standard-output* "random-walk.svg"
