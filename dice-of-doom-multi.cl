@@ -103,7 +103,7 @@
                         (cdr move))))
         (caddr tree)))))
 
-(defun get-connected (board players pos)
+(defun get-connected (board player pos)
   (labels ((check-pos (pos visited)
               (if (and (eq (car (aref board pos)) player)
                        (not (member pos visited)))

@@ -80,7 +80,7 @@
       (progn
         (princ "<!doctype html>")
         (tag center ()
-          (princ "Welcom to DICE OF DOOM!")
+          (princ "Welcome to DICE OF DOOM!")
           (tag br ())
           (let ((chosen (assoc 'chosen params)))
             (when (or (not *cur-game-tree*) (not chosen))
@@ -138,12 +138,26 @@
         (princ "pass"))
       (princ " or make another move:"))))
 
+(defun simple-timeout ()
+  "window.setTimeout('window.location=\"game.html?chosen=NIL\"',5000)")
+
+(defun broken-timeout ()
+  "var timer = null
+  function watchComplete(){
+    node = document.getElementById(\"complete\")
+    if(node !== null){
+      clearInterval(timer);
+      console.log(\"Reloading Page\");
+      window.location.reload(false);
+    }
+  }
+  timer = setInterval(watchComplete, 1000);")
+
 (defun web-handle-computer ()
   (setf *cur-game-tree* (handle-computer *cur-game-tree*))
   (princ "The computer has moved. ")
   (tag script ()
-    (princ
-      "window.setTimeout('window.location=\"game.html?chosen=NIL\"',5000)")))
+    (princ (simple-timeout))))
 
 (defun draw-dod-page (tree selected-tile)
   (svg *board-width* *board-height*

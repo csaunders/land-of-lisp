@@ -67,7 +67,8 @@
                           (format t "HTTP/1.1 200 OK~%")
                           (format t "Content-Type: text/html~%")
                           (format t "~%")
-                          (funcall request-handler path header params))
+                          (funcall request-handler path header params)
+                          (format t "<strong id=\"closed\">Connection Closed</strong>"))
                         )))
       (socket-server-close socket))))
 
